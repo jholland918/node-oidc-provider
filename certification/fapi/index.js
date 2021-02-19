@@ -22,6 +22,15 @@ const JWK_PKJWTTWO = jose.JWK.asKey(readFileSync(path.join(__dirname, 'pkjwttwo.
 const JWK_MTLSONE = jose.JWK.asKey(readFileSync(path.join(__dirname, 'mtlsone.key')), { x5c: [normalize(readFileSync(path.join(__dirname, 'mtlsone.crt')))], alg: 'PS256', use: 'sig' }).toJWK();
 const JWK_MTLSTWO = jose.JWK.asKey(readFileSync(path.join(__dirname, 'mtlstwo.key')), { x5c: [normalize(readFileSync(path.join(__dirname, 'mtlstwo.crt')))], alg: 'PS256', use: 'sig' }).toJWK();
 
+// Asymmetric key import
+let mtlsoneKeyBuffer = readFileSync(path.join(__dirname, 'mtlsone.key'));
+let mtlsoneCertBuffer = readFileSync(path.join(__dirname, 'mtlsone.crt'));
+const JWK_MTLSONE2 = jose.JWK.asKey(mtlsoneKeyBuffer, { 
+  x5c: [normalize(mtlsoneCertBuffer)], // the key's X.509 Certificate Chain Parameter
+  alg: 'PS256', // the algorithm intended for use with the key
+  use: 'sig'    // 'sig' means the key is to be used for signing & verifying data
+}).toJWK();
+
 const fapi = new Provider(ISSUER, {
   acrValues: ['urn:mace:incommon:iap:silver'],
   routes: {
